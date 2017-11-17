@@ -33,7 +33,7 @@
             <ul class="list-unstyled mb-0">
               <?php foreach ($categories as $category): ?>
                 <li>
-                  <a href="#"><?= $category['label'] ?></a>
+                  <a href="index.php?category=<?=$category['idcategories']?>"><?= $category['label'] ?></a>
                 </li>
               <?php endforeach; ?>
             </ul>
@@ -53,7 +53,7 @@
             <?php foreach ($tags as $tag): ?>
               <ul class="list-unstyled mb-0">
                 <li>
-                  <a href="#"><?= $tag['label']?></a>
+                  <a href="index.php?tags=<?= $tag['idtags'] ?>"><?= $tag['label']?></a>
                 </li>
               </ul>
             <?php endforeach; ?>

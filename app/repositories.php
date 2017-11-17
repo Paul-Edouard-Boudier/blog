@@ -8,6 +8,16 @@
     return $pdo;
   }
 
+  function fetchArticles($currentPage) {
+    $pdo = db();
+    $offset = ($currentPage -1) *3;
+    $limit = 3;
+    $query = "SELECT * FROM `articles`
+              ORDER BY `published_at` DESC LIMIT $limit OFFSET $offset;";
+    $result = $pdo->query($query);
+    $articles = $result->fetchAll();
+    return $articles;
+  }
   function fetchArticle($id) {
     $pdo = db();
     $query = "SELECT * FROM `articles` WHERE `idarticles` = ?";
@@ -16,6 +26,28 @@
     $result = $prepare->execute();
     if ($result == true) {
       return $prepare->fetch();
+    }
+  }
+  function fetchArticlesCategories($id) {
+    $pdo = db();
+    $query = "SELECT * FROM `articles` WHERE `categories_id` = ?";
+    $prepare = $pdo->prepare($query);
+    $prepare->bindParam(1, $id, PDO::PARAM_INT);
+    $result = $prepare->execute();
+    if ($result == true) {
+      return $prepare->fetchAll();
+    }
+  }
+  function fetchArticlesTags($id) {
+    $pdo = db();
+    $query = "SELECT `articles_id`, `articles`.`*` FROM `articles_has_tags`
+    INNER JOIN `articles` ON `articles`.`idarticles` = `articles_has_tags`.`articles_id`
+    WHERE `tags_id` = ?;";
+    $prepare = $pdo->prepare($query);
+    $prepare->bindParam(1, $id, PDO::PARAM_INT);
+    $result = $prepare->execute();
+    if ($result == true) {
+      return $prepare->fetchAll();
     }
   }
 
@@ -47,9 +79,10 @@
     $prepare->bindParam(1, $id, PDO::PARAM_INT);
     $result = $prepare->execute();
     if ($result == true) {
-      return $prepare->fetchAll();
+      return $prepare->fetchColumn();
     }
   }
+
 
   function fetchCategory($id) {
     $pdo = db();
@@ -89,10 +122,19 @@
     return $tags;
   }
 
-  function maxIdArticles() {
+  // function maxIdArticles() {
+  //   $pdo = db();
+  //   $query = "SELECT MAX(idarticles) FROM `articles`";
+  //   $result = $pdo->query($query);
+  //   $maxId = (int)$result->fetchColumn();
+  //   return $maxId;
+  // }
+  function countPages() {
     $pdo = db();
-    $query = "SELECT MAX(idarticles) FROM `articles`";
+    $limit = 3;
+    $query = "SELECT COUNT(*) FROM `articles`;";
     $result = $pdo->query($query);
-    $maxId = (int)$result->fetchColumn();
-    return $maxId;
+    $numberOfArticles = $result->fetchColumn();
+    $numberOfPages = (int)ceil($numberOfArticles / $limit);
+    return $numberOfPages;
   }

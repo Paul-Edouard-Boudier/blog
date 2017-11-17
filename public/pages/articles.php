@@ -6,25 +6,40 @@
     <small>Secondary Text</small>
   </h1>
   <!-- TEST: Blog Posts -->
-  <?php for ($i=1; $i <= maxIdArticles(); $i++): ?>
+    <?php
+      if(!isset($_GET['selectPage']) || empty($_GET['selectPage'])) {
+        $currentPage = 1;
+      } else { $currentPage = (int)$_GET['selectPage'];} //var_dump($currentPage);
+      
+      if (isset($_GET['category']) || !empty($_GET['category'])) {
+        $id = $_GET['category'];
+        $articles = fetchArticlesCategories($id);
+      }
+      else if (isset($_GET['tags']) || !empty($_GET['tags'])) {
+        $id = $_GET['tags'];
+        $articles = fetchArticlesTags($id);
+      }
+      else {
+        $articles = fetchArticles($currentPage);
+      }
+    ?>
+  <?php foreach ($articles as $article): ?>
+    <?php
+      $article_id = $article['idarticles'];
+      $comments = fetchComments($article_id);
+      $iduser = $article['users_id'];
+      $user = fetchAuthor($iduser);
+      $category_id = $article['categories_id'];
+      $category = fetchCategory($category_id)[0];
+      $tags = fetchTags($article_id);
+      $numberComments = countComments($article_id);
+    ?>
     <div class="card mb-4">
-      <?php
-        $article = fetchArticle($i);
-        $article_id = $article['idarticles'];
-        $comments = fetchComments($article_id);
-        $iduser = $article['users_id'];
-        $user = fetchAuthor($iduser);
-        $category_id = $article['categories_id'];
-        $category = fetchCategory($category_id)[0];
-        $tags = fetchTags($article_id);
-        $numberComments = countComments($article_id)[0]["COUNT(*)"];
-        $_GET['id'] = $article_id;
-      ?>
       <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
       <div class="card-body">
         <h2 class="card-title"><?= $article['title']?></h2>
         <p class="card-text"><?= substr($article['content'], 0, 150). " ..." ?></p>
-        <a href='indexarticle.php?id=<?=$_GET['id']?>' class="btn btn-primary">Read More &rarr;</a>
+        <a href='indexarticle.php?id=<?=$article_id?>' class="btn btn-primary">Read More &rarr;</a>
       </div>
       <div class="card-footer text-muted">
         <div class="row">
@@ -47,16 +62,24 @@
         </div>
       </div>
     </div>
-  <?php endfor; ?>
+  <?php endforeach; ?>
 
   <!-- Pagination -->
   <ul class="pagination justify-content-center mb-4">
-    <li class="page-item">
-      <a class="page-link" href="#">&larr; Older</a>
-    </li>
-    <li class="page-item disabled">
-      <a class="page-link" href="#">Newer &rarr;</a>
-    </li>
+    <ul class="pagination">
+      <?php
+        $nbpages = countPages();
+        for ($i=1; $i <= $nbpages ; $i++) {
+          $classLi='page-item';
+          if($currentPage == $i){
+            $classLi .= ' active';
+          }
+          echo "<li class='$classLi'>";
+          echo '<a class="page-link" href="?selectPage='.$i.'">'.$i.'</a>';
+          echo '</li>';
+        }
+      ?>
+    </ul>
   </ul>
 
 </div>

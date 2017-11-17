@@ -1,7 +1,7 @@
 
 <?php require_once "../app/repositories.php" ?>
 <?php $id = $_GET['id'] ?>
-<?php $article = fetchArticle($id); ?>
+<?php $article = fetchArticle($_GET['id']); ?>
 <?php
   $author = fetchAuthor($article['users_id']);
   if ($author == false) {

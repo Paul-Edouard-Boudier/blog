@@ -7,20 +7,24 @@
   </h1>
   <!-- TEST: Blog Posts -->
     <?php
+    $nbpages = countPagesTags(1);
       if(!isset($_GET['selectPage']) || empty($_GET['selectPage'])) {
         $currentPage = 1;
       } else { $currentPage = (int)$_GET['selectPage'];} //var_dump($currentPage);
-      
+
       if (isset($_GET['category']) || !empty($_GET['category'])) {
         $id = $_GET['category'];
         $articles = fetchArticlesCategories($id);
+        $nbpages = countPagesCategories($id);
       }
       else if (isset($_GET['tags']) || !empty($_GET['tags'])) {
         $id = $_GET['tags'];
         $articles = fetchArticlesTags($id);
+        $nbpages = countPagesTags($id);
       }
       else {
         $articles = fetchArticles($currentPage);
+        $nbpages = countPages();
       }
     ?>
   <?php foreach ($articles as $article): ?>
@@ -68,7 +72,7 @@
   <ul class="pagination justify-content-center mb-4">
     <ul class="pagination">
       <?php
-        $nbpages = countPages();
+        // $nbpages = countPages();
         for ($i=1; $i <= $nbpages ; $i++) {
           $classLi='page-item';
           if($currentPage == $i){

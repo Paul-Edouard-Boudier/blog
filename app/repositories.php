@@ -83,7 +83,6 @@
     }
   }
 
-
   function fetchCategory($id) {
     $pdo = db();
     $query = "SELECT `idcategories`, `label` FROM `categories`
@@ -122,13 +121,6 @@
     return $tags;
   }
 
-  // function maxIdArticles() {
-  //   $pdo = db();
-  //   $query = "SELECT MAX(idarticles) FROM `articles`";
-  //   $result = $pdo->query($query);
-  //   $maxId = (int)$result->fetchColumn();
-  //   return $maxId;
-  // }
   function countPages() {
     $pdo = db();
     $limit = 3;
@@ -136,5 +128,26 @@
     $result = $pdo->query($query);
     $numberOfArticles = $result->fetchColumn();
     $numberOfPages = (int)ceil($numberOfArticles / $limit);
+    return $numberOfPages;
+  }
+  function countPagesCategories($id) {
+    $pdo = db();
+    $limit = 3;
+    $query = "SELECT COUNT(*) FROM `articles` WHERE `categories_id` = $id;";
+    $result = $pdo->query($query);
+    $numberOfArticles = $result->fetchColumn();
+    $numberOfPages = (int)ceil($numberOfArticles / $limit);
+    return $numberOfPages;
+  }
+  function countPagesTags($id) {
+    $pdo = db();
+    $limit = 3;
+    $query = "SELECT `articles_id`, `articles`.`*` FROM `articles_has_tags`
+    INNER JOIN `articles` ON `articles`.`idarticles` = `articles_has_tags`.`articles_id`
+    WHERE `tags_id` = ?;";
+    $result = $pdo->query($query);
+    $numberOfArticles = $result->rowCount();
+    $numberOfPages = (int)ceil($numberOfArticles / $limit);
+    var_dump($numberOfPages);die;
     return $numberOfPages;
   }

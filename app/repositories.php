@@ -1,5 +1,7 @@
 <?php
-
+  function test() {
+    return "test";
+  }
   function db() {
     $dsn="mysql:dbname=BlogDDB;host=127.0.0.1;charset=UTF8";
     $username="root"; $passwd="0000";

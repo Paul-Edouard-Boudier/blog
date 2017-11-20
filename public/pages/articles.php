@@ -3,7 +3,7 @@
 <div class="col-md-8">
 
   <h1 class="my-4">Page Heading
-    <small>Secondary Text</small>
+    <small>Secondary text</small>
   </h1>
   <!-- TEST: Blog Posts -->
     <?php

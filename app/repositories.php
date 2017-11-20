@@ -1,6 +1,6 @@
 <?php
   function test() {
-    return "test";
+    var_dump("test");die;
   }
   function db() {
     $dsn="mysql:dbname=BlogDDB;host=127.0.0.1;charset=UTF8";
@@ -144,12 +144,13 @@
   function countPagesTags($id) {
     $pdo = db();
     $limit = 3;
+    // var_dump($limit);die;
     $query = "SELECT `articles_id`, `articles`.`*` FROM `articles_has_tags`
     INNER JOIN `articles` ON `articles`.`idarticles` = `articles_has_tags`.`articles_id`
-    WHERE `tags_id` = ?;";
+    WHERE `tags_id` = $id;";
     $result = $pdo->query($query);
     $numberOfArticles = $result->rowCount();
     $numberOfPages = (int)ceil($numberOfArticles / $limit);
-    var_dump($numberOfPages);die;
+    // var_dump($numberOfPages);die;
     return $numberOfPages;
   }

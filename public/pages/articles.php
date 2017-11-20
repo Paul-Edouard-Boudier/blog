@@ -5,9 +5,9 @@
   <h1 class="my-4">Page Heading
     <small>Secondary text</small>
   </h1>
-  <!-- TEST: Blog Posts -->
     <?php
     $nbpages = countPagesTags(1);
+    // $nbpages = konar(1);
       if(!isset($_GET['selectPage']) || empty($_GET['selectPage'])) {
         $currentPage = 1;
       } else { $currentPage = (int)$_GET['selectPage'];} //var_dump($currentPage);
@@ -37,7 +37,7 @@
       $category = fetchCategory($category_id)[0];
       $tags = fetchTags($article_id);
       $numberComments = countComments($article_id);
-    ?>
+    ?> 
     <div class="card mb-4">
       <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
       <div class="card-body">
